@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments :: head('Histórico')}"></head>
+    <body>
+        <header th:replace="~{fragments :: header}"></header>
+        <main>
+            <div class="page-heading">
+                <div class="eyebrow">CADA TENTATIVA CONTA</div>
+                <h1>Seu histórico de estudos</h1>
+                <p>Acompanhe os resultados e revisite o que você aprendeu.</p>
+            </div>
+            <div class="card empty" th:if="${#lists.isEmpty(attempts)}">
+                <h3>Seu histórico começa na primeira tentativa</h3>
+                <p>Responda um simulado para ver seu resultado aqui.</p>
+                <a class="button" th:href="@{/}">Ver simulados</a>
+            </div>
+            <div class="card table-wrap" th:unless="${#lists.isEmpty(attempts)}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Simulado</th>
+                            <th>Data</th>
+                            <th>Acertos</th>
+                            <th>Nota</th>
+                            <th>Revisão</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="a : ${attempts}">
+                            <td th:text="${a.quiz.title}"></td>
+                            <td th:text="${#temporals.format(a.createdAt,'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${a.correctCount} + ' / ' + ${a.total}"></td>
+                            <td>
+                                <span
+                                    class="tag"
+                                    th:text="${#numbers.formatDecimal(a.grade,1,1)}"
+                                ></span>
+                            </td>
+                            <td>
+                                <a class="text-link" th:href="@{/resultados/{id}(id=${a.id})}">
+                                    Ver resultado →
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </body>
+</html>

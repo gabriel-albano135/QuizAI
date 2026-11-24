@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments :: head('Meus simulados')}"></head>
+    <body>
+        <header th:replace="~{fragments :: header}"></header>
+        <main>
+            <section class="hero">
+                <div>
+                    <div class="eyebrow">SEU PRÓXIMO ACERTO COMEÇA AQUI</div>
+                    <h1>
+                        Transforme conteúdo
+                        <br />
+                        em conhecimento.
+                    </h1>
+                    <p>
+                        Crie simulados com inteligência artificial,
+                        <br />
+                        pratique no seu ritmo e acompanhe sua evolução.
+                    </p>
+                    <a class="button" th:href="@{/simulados/novo}">
+                        Criar meu simulado
+                        <span>↗</span>
+                    </a>
+                </div>
+                <div class="hero-art" aria-hidden="true">
+                    <div class="art-label">UMA QUESTÃO DE CADA VEZ</div>
+                    <div class="art-question">
+                        O que você vai
+                        <br />
+                        aprender hoje?
+                    </div>
+                    <div class="art-option">A &nbsp; Explorar um novo assunto</div>
+                    <div class="art-option chosen">B &nbsp; Praticar e evoluir &nbsp; ✓</div>
+                    <div class="art-option">C &nbsp; Revisar para a prova</div>
+                </div>
+            </section>
+            <section class="stats">
+                <div>
+                    <strong th:text="${#lists.size(quizzes)}">0</strong>
+                    <span>simulados criados</span>
+                </div>
+                <div>
+                    <strong th:text="${attemptCount}">0</strong>
+                    <span>tentativas concluídas</span>
+                </div>
+                <div>
+                    <strong>Seu ritmo</strong>
+                    <span>estude quando quiser</span>
+                </div>
+            </section>
+            <div class="section-heading">
+                <div>
+                    <h2>Seus simulados</h2>
+                    <p>Escolha um conteúdo e continue praticando.</p>
+                </div>
+                <span class="tag">Biblioteca de estudos</span>
+            </div>
+            <section class="empty card" th:if="${#lists.isEmpty(quizzes)}">
+                <div class="empty-icon">✦</div>
+                <h3>Seu primeiro simulado está a um passo</h3>
+                <p>Cole suas anotações e deixe a IA preparar as questões.</p>
+                <a class="button" th:href="@{/simulados/novo}">Começar agora</a>
+            </section>
+            <section class="grid" th:unless="${#lists.isEmpty(quizzes)}">
+                <article class="card quiz-card" th:each="quiz : ${quizzes}">
+                    <div class="card-top">
+                        <span class="tag" th:text="${quiz.difficulty}"></span>
+                        <span
+                            class="muted"
+                            th:text="${#temporals.format(quiz.createdAt,'dd/MM/yyyy')}"
+                        ></span>
+                    </div>
+                    <h3 th:text="${quiz.title}"></h3>
+                    <p>
+                        <span th:text="${quiz.questionCount}"></span>
+                        questões · múltipla escolha
+                    </p>
+                    <a class="text-link" th:href="@{/simulados/{id}(id=${quiz.id})}">
+                        Responder simulado →
+                    </a>
+                </article>
+            </section>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </body>
+</html>

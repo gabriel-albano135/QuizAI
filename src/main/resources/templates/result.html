@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments :: head('Resultado')}"></head>
+    <body>
+        <header th:replace="~{fragments :: header}"></header>
+        <main>
+            <section class="result-hero">
+                <div>
+                    <div class="eyebrow">MAIS UM PASSO NA SUA EVOLUÇÃO</div>
+                    <h1>Simulado concluído!</h1>
+                    <p th:text="${attempt.quiz.title}"></p>
+                    <p>
+                        <strong th:text="${attempt.correctCount}"></strong>
+                        acertos em
+                        <strong th:text="${attempt.total}"></strong>
+                        questões
+                    </p>
+                </div>
+                <div class="score">
+                    <strong th:text="${#numbers.formatDecimal(attempt.grade,1,1)}"></strong>
+                    <span>nota de 0 a 10</span>
+                </div>
+            </section>
+            <div class="actions">
+                <a class="button" th:href="@{/simulados/{id}(id=${attempt.quiz.id})}">
+                    Tentar novamente
+                </a>
+                <a class="button secondary" th:href="@{/historico}">Ver histórico</a>
+            </div>
+            <div class="section-heading">
+                <div>
+                    <h2>Revise suas respostas</h2>
+                    <p>
+                        Use as explicações para identificar o que precisa revisar. A IA pode cometer
+                        erros.
+                    </p>
+                </div>
+            </div>
+            <section class="reading-width">
+                <article class="card question" th:each="q,s : ${questions}">
+                    <div class="card-top">
+                        <span class="tag" th:text="'Questão ' + ${s.count}"></span>
+                        <strong
+                            th:class="${answers[s.index] == q.correctIndex ? 'success-text' : 'error-text'}"
+                            th:text="${answers[s.index] == q.correctIndex ? '✓ Você acertou' : 'Revise esta questão'}"
+                        ></strong>
+                    </div>
+                    <h2 th:text="${q.statement}"></h2>
+                    <div
+                        class="option"
+                        th:each="o,os : ${q.options}"
+                        th:classappend="${os.index == q.correctIndex ? 'correct' : (os.index == answers[s.index] ? 'incorrect' : '')}"
+                    >
+                        <span
+                            class="letter"
+                            th:text="${'ABCD'.substring(os.index,os.index+1)}"
+                        ></span>
+                        <span th:text="${o}"></span>
+                        <small th:if="${os.index == q.correctIndex}">Correta</small>
+                        <small th:if="${os.index == answers[s.index]}">Sua resposta</small>
+                    </div>
+                    <div class="explanation">
+                        <strong>Entenda a resposta</strong>
+                        <p th:text="${q.explanation}"></p>
+                    </div>
+                </article>
+            </section>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </body>
+</html>

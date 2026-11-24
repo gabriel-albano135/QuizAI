@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments :: head('Novo simulado')}"></head>
+    <body>
+        <header th:replace="~{fragments :: header}"></header>
+        <main>
+            <div class="page-heading">
+                <div class="eyebrow">CRIE SEU PRÓXIMO DESAFIO</div>
+                <h1>O que vamos estudar?</h1>
+                <p>Use suas anotações como ponto de partida para um novo simulado.</p>
+            </div>
+            <div class="create-layout">
+                <form
+                    class="card"
+                    th:action="@{/simulados}"
+                    th:object="${form}"
+                    method="post"
+                    data-generating
+                >
+                    <div class="alert" role="alert" th:if="${error}" th:text="${error}"></div>
+                    <div class="alert" th:if="${#fields.hasAnyErrors()}">
+                        Confira os campos: tema obrigatório, conteúdo entre 80 e 16.000 caracteres e
+                        quantidade entre 3 e 10 questões.
+                    </div>
+                    <label for="title">Tema do simulado</label>
+                    <input
+                        id="title"
+                        th:field="*{title}"
+                        maxlength="100"
+                        required
+                        placeholder="Ex.: Sistema Solar"
+                    />
+                    <section class="pdf-import" aria-labelledby="pdf-heading">
+                        <h3 id="pdf-heading">Importar conteúdo de um PDF</h3>
+                        <p class="field-hint">
+                            PDF com texto selecionável, até 10 MB. Imagens, gráficos e páginas
+                            digitalizadas não são interpretados.
+                        </p>
+                        <label for="pdf-file">Arquivo PDF</label>
+                        <input type="file" id="pdf-file" accept=".pdf,application/pdf" />
+                        <div class="form-row">
+                            <div>
+                                <label for="pdf-start">Página inicial (opcional)</label>
+                                <input
+                                    type="number"
+                                    id="pdf-start"
+                                    min="1"
+                                    step="1"
+                                    placeholder="1"
+                                />
+                            </div>
+                            <div>
+                                <label for="pdf-end">Página final (opcional)</label>
+                                <input
+                                    type="number"
+                                    id="pdf-end"
+                                    min="1"
+                                    step="1"
+                                    placeholder="Última página"
+                                />
+                            </div>
+                        </div>
+                        <p class="field-hint">
+                            Deixe em branco para importar todas as páginas (até 50).
+                        </p>
+                        <button
+                            type="button"
+                            class="button secondary wide"
+                            id="extract-pdf"
+                            th:attr="data-url=@{/api/pdf/extrair}"
+                        >
+                            Extrair texto do PDF
+                        </button>
+                        <p id="pdf-status" class="field-hint" role="status" aria-live="polite"></p>
+                    </section>
+                    <label for="content">Conteúdo de estudo</label>
+                    <textarea
+                        id="content"
+                        th:field="*{content}"
+                        minlength="80"
+                        maxlength="16000"
+                        rows="12"
+                        required
+                        placeholder="Cole aqui suas anotações, um resumo da aula ou o texto que deseja revisar..."
+                    ></textarea>
+                    <div class="field-hint">
+                        <span id="content-count">0</span>
+                        /16.000 caracteres. Mínimo de 80.
+                    </div>
+                    <div class="form-row">
+                        <div>
+                            <label for="difficulty">Dificuldade</label>
+                            <select id="difficulty" th:field="*{difficulty}">
+                                <option value="Fácil">Fácil</option>
+                                <option value="Médio">Médio</option>
+                                <option value="Difícil">Difícil</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="count">Quantidade de questões</label>
+                            <select id="count" th:field="*{count}">
+                                <option
+                                    th:each="n : ${#numbers.sequence(3,10)}"
+                                    th:value="${n}"
+                                    th:text="${n} + ' questões'"
+                                ></option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="button wide">✦ Gerar simulado com IA</button>
+                    <p class="field-hint" data-status aria-live="polite">
+                        A geração pode levar alguns instantes.
+                    </p>
+                </form>
+                <aside>
+                    <div class="card tips">
+                        <span class="tag">COMO FUNCIONA</span>
+                        <h3>Do conteúdo à prática</h3>
+                        <ol>
+                            <li>
+                                <strong>Compartilhe o conteúdo</strong>
+                                <p>Quanto mais claro o material, melhores serão as perguntas.</p>
+                            </li>
+                            <li>
+                                <strong>Personalize seu desafio</strong>
+                                <p>Escolha a dificuldade e a quantidade de questões.</p>
+                            </li>
+                            <li>
+                                <strong>Aprenda com seus resultados</strong>
+                                <p>Veja sua nota e entenda cada resposta.</p>
+                            </li>
+                        </ol>
+                        <div class="note">
+                            A IA pode cometer erros. Confira o gabarito com seu material de estudo.
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </body>
+</html>

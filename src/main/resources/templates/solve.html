@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments :: head('Responder simulado')}"></head>
+    <body>
+        <header th:replace="~{fragments :: header}"></header>
+        <main>
+            <div class="page-heading">
+                <span class="tag" th:text="${quiz.difficulty}"></span>
+                <h1 th:text="${quiz.title}"></h1>
+                <p>
+                    Selecione uma alternativa em cada questão. O gabarito aparece após a correção.
+                </p>
+            </div>
+            <form
+                th:action="@{/simulados/{id}/respostas(id=${quiz.id})}"
+                method="post"
+                class="reading-width"
+            >
+                <div class="alert" role="alert" th:if="${error}" th:text="${error}"></div>
+                <fieldset class="card question" th:each="q,stat : ${questions}">
+                    <legend
+                        th:text="'Questão ' + ${stat.count} + ' de ' + ${#lists.size(questions)}"
+                    ></legend>
+                    <h2 th:text="${q.statement}"></h2>
+                    <label class="option" th:each="option,os : ${q.options}">
+                        <input
+                            type="radio"
+                            th:name="'q' + ${stat.index}"
+                            th:value="${os.index}"
+                            th:checked="${selected != null and selected['q' + stat.index] == '' + os.index}"
+                            required
+                        />
+                        <span
+                            class="letter"
+                            th:text="${'ABCD'.substring(os.index,os.index+1)}"
+                        ></span>
+                        <span th:text="${option}"></span>
+                    </label>
+                </fieldset>
+                <button class="button wide" type="submit">Finalizar e ver resultado →</button>
+            </form>
+        </main>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </body>
+</html>

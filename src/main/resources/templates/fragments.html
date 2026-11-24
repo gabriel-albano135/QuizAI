@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="head(title)">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title th:text="${title} + ' | QuizAI'">QuizAI</title>
+        <link rel="stylesheet" th:href="@{/css/style.css(v='pdf2')}" />
+        <script defer th:src="@{/js/app.js(v='pdf2')}"></script>
+    </head>
+    <body>
+        <header th:fragment="header">
+            <nav>
+                <a class="brand" th:href="@{/}">
+                    <span class="brand-icon">Q</span>
+                    Quiz
+                    <span>AI</span>
+                </a>
+                <div class="navlinks">
+                    <a th:href="@{/}">Meus simulados</a>
+                    <a th:href="@{/historico}">Histórico</a>
+                    <a class="button small" th:href="@{/simulados/novo}">+ Novo simulado</a>
+                </div>
+            </nav>
+        </header>
+
+        <footer th:fragment="footer">QuizAI · Aprenda uma questão de cada vez.</footer>
+    </body>
+</html>

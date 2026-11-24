@@ -1,0 +1,11 @@
+/target/
+/data/
+.idea/
+.run/
+*.iml
+.env
+.env.*
+!.env.example
+application-local.properties
+*.log
+.DS_Store
